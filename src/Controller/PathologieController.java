@@ -5,6 +5,8 @@
  */
 package Controller;
 
+import Model.Huile;
+import Model.HuileDAO;
 import Model.ManageDB;
 import Model.Pathologie;
 import Model.PathologieDAO;
@@ -45,22 +47,51 @@ public class PathologieController {
     public ArrayList<Pathologie> getAllPathologies() {
         ManageDB.openDataBase();
         PathologieDAO dao = new PathologieDAO(ManageDB.conn);
+        this.listPathologie.clear();
         this.listPathologie = dao.findAll();
 
         return this.listPathologie;
     }
 
-    public void delete(Pathologie p) {
+    public void deletePathologie(Pathologie p) {
         ManageDB.openDataBase();
         PathologieDAO dao = new PathologieDAO(ManageDB.conn);
-        
+
         for (Pathologie pa : this.listPathologie) {
-               System.out.println(pa);            
-           if (pa.getName() == p.getName()) {
-               dao.delete(pa);
-           }
+            System.out.println(pa);
+            if (pa.getName() == p.getName()) {
+                dao.delete(pa);
+            }
         }
-        
+
+    }
+
+    public void modifPathologie(Pathologie p) {
+        ManageDB.openDataBase();
+        PathologieDAO dao = new PathologieDAO(ManageDB.conn);
+
+        dao.update(p);
+    }
+
+    public void addHuile(Huile h) {
+        ManageDB.openDataBase();
+        HuileDAO dao = new HuileDAO(ManageDB.conn);
+        dao.create(h);
+        ManageDB.closeDataBase();
+    }
+    
+    public void updateHuile(Huile h) {
+        ManageDB.openDataBase();
+        HuileDAO dao = new HuileDAO(ManageDB.conn);
+        dao.update(h);
+        ManageDB.closeDataBase();
+    }
+    
+    public void deleteHuile(Huile h) {
+        ManageDB.openDataBase();
+        HuileDAO dao = new HuileDAO(ManageDB.conn);
+        dao.delete(h);
+        ManageDB.closeDataBase();
     }
 
 }

@@ -22,16 +22,16 @@ import java.util.List;
  *
  * @author Jerome
  */
-public class PathologieDAO extends AbstractDAO<Pathologie> {
+public class HuileDAO extends AbstractDAO<Huile> {
 
-    public PathologieDAO(Connection conn) {
+    public HuileDAO(Connection conn) {
         super(conn);
-        this.tableName = "PATHOLOGIE";
+        this.tableName = "HUILE";
         this.primaryKey = "id";
     }
 
     @Override
-    public boolean create(Pathologie obj) {
+    public boolean create(Huile obj) {
         String query = "";
         try {
             Statement state = this.connect.createStatement();
@@ -39,20 +39,20 @@ public class PathologieDAO extends AbstractDAO<Pathologie> {
             query = "INSERT INTO " + tableName
                     + " (NOM, DESCRIPTION) "
                     + " VALUES ("
-                    + "'" + obj.getName() + "',"
+                    + "'" + obj.getNom()+ "',"
                     + "'" + obj.getDescription() + "'"
                     + ")";
             state.executeUpdate(query);
 
         } catch (SQLException ex) {
-            Logger.getLogger(PathologieDAO.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(HuileDAO.class.getName()).log(Level.SEVERE, null, ex);
             System.out.println(query);
         }
         return true;
     }
 
     @Override
-    public boolean delete(Pathologie obj) {
+    public boolean delete(Huile obj) {
        String query = "";
         try {
             Statement state = this.connect.createStatement();
@@ -63,7 +63,7 @@ public class PathologieDAO extends AbstractDAO<Pathologie> {
 
 
         } catch (SQLException ex) {
-            Logger.getLogger(PathologieDAO.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(HuileDAO.class.getName()).log(Level.SEVERE, null, ex);
             System.out.println(query);
             return false;
         }
@@ -71,20 +71,20 @@ public class PathologieDAO extends AbstractDAO<Pathologie> {
     }
 
     @Override
-    public boolean update(Pathologie obj) {
+    public boolean update(Huile obj) {
          String query = "";
         try {
             Statement state = this.connect.createStatement();
 
             query = "UPDATE " + tableName + " SET "
-                    + " NOM = '" + obj.getName() + "', "
+                    + " NOM = '" + obj.getNom()+ "', "
                     + " DESCRIPTION = '" + obj.getDescription() + "' "
                     + " WHERE " + primaryKey + " = " + obj.getId();
             state.executeUpdate(query);
 
 
         } catch (SQLException ex) {
-            Logger.getLogger(PathologieDAO.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(HuileDAO.class.getName()).log(Level.SEVERE, null, ex);
             System.out.println(query);
             return false;
         }
@@ -92,14 +92,14 @@ public class PathologieDAO extends AbstractDAO<Pathologie> {
     }
 
     @Override
-    public Pathologie findById(int id) {
+    public Huile findById(int id) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public ArrayList<Pathologie> findAll() {
-        ArrayList<Pathologie> liste = new ArrayList<Pathologie>();
-        Pathologie p;
+    public ArrayList<Huile> findAll() {
+        ArrayList<Huile> liste = new ArrayList<Huile>();
+        Huile p;
         String query = "";
         try {
             Statement state = this.connect.createStatement();
@@ -107,8 +107,8 @@ public class PathologieDAO extends AbstractDAO<Pathologie> {
             ResultSet result = state.executeQuery(query);
 
             while (result.next()) {
-                p = new Pathologie();
-                p.setName(result.getString("nom"));
+                p = new Huile();
+                p.setNom(result.getString("nom"));
                 p.setDescription(result.getString("description"));
                 p.setId(result.getInt(primaryKey));
 
@@ -116,7 +116,7 @@ public class PathologieDAO extends AbstractDAO<Pathologie> {
             }
 
         } catch (SQLException ex) {
-            Logger.getLogger(PathologieDAO.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(HuileDAO.class.getName()).log(Level.SEVERE, null, ex);
             System.out.println(query);
         } finally {
             return liste;

@@ -7,6 +7,8 @@ package View;
 
 import Controller.PathologieController;
 import Model.Pathologie;
+import com.sun.org.apache.xpath.internal.operations.Bool;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -15,13 +17,23 @@ import Model.Pathologie;
 public class PathologieForm extends javax.swing.JFrame {
 
     public PathologieController controller;
-    
+    public boolean modif; // Si initialisé à true, on appel la dao update au lieux de create
+
     /**
      * Creates new form PathologieForm
      */
     public PathologieForm() {
         initComponents();
         this.controller = new PathologieController();
+        this.modif = false;
+        this.jtext_id.setVisible(false);
+    }
+
+    public PathologieForm(Pathologie p) {
+        initComponents();
+        this.controller = new PathologieController();
+        this.modif = true;
+        this.populate(p);
     }
 
     /**
@@ -41,6 +53,7 @@ public class PathologieForm extends javax.swing.JFrame {
         jButton2 = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         jEditorPane1 = new javax.swing.JEditorPane();
+        jtext_id = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -68,6 +81,10 @@ public class PathologieForm extends javax.swing.JFrame {
 
         jScrollPane2.setViewportView(jEditorPane1);
 
+        jtext_id.setEnabled(false);
+        jtext_id.setFocusable(false);
+        jtext_id.setOpaque(false);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -86,6 +103,9 @@ public class PathologieForm extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)))
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
+                                .addComponent(jtext_id, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addGroup(layout.createSequentialGroup()
                                 .addComponent(jButton2)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 283, Short.MAX_VALUE)
                                 .addComponent(jButton1))
@@ -97,7 +117,9 @@ public class PathologieForm extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jLabel1)
-                .addGap(42, 42, 42)
+                .addGap(16, 16, 16)
+                .addComponent(jtext_id, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2))
@@ -120,13 +142,25 @@ public class PathologieForm extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        Pathologie p = new Pathologie();
-        p.setName(jTextField1.getText());
-        p.setDescription(jEditorPane1.getText());
-        
-        this.controller.addPathologie(p);
-        
-        
+        try {
+            Pathologie p = new Pathologie();
+            p.setName(jTextField1.getText());
+            p.setDescription(jEditorPane1.getText());
+
+            if (this.modif) {
+                int id = Integer.valueOf(this.jtext_id.getText());
+                p.setId(id);
+                this.controller.modifPathologie(p);
+            } else {
+                this.controller.addPathologie(p);
+            }
+            Pathologies w = new Pathologies();
+            w.setVisible(true);
+            this.dispose();
+        } catch (Exception e) {
+
+        }
+
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
@@ -179,5 +213,13 @@ public class PathologieForm extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTextField jTextField1;
+    private javax.swing.JTextField jtext_id;
     // End of variables declaration//GEN-END:variables
+
+    private void populate(Pathologie p) {
+        this.jTextField1.setText(p.getName());
+        this.jEditorPane1.setText(p.getDescription());
+        this.jtext_id.setVisible(false);
+        this.jtext_id.setText(p.getId().toString());
+    }
 }
